@@ -2,6 +2,7 @@ import pandas as pd
 import demoji
 
 class CleaningData:
+    
     def __init__(self):
         
         # membaca data dari file csv
@@ -10,6 +11,8 @@ class CleaningData:
         self.sapidata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-sapi.csv')
         self.ikandata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-ikan.csv')
         self.udangdata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-udang.csv')
+
+        self.clean_data()
 
     def clean_data(self):
 
@@ -60,10 +63,6 @@ class CleaningData:
         self.udangdata['Ingredients'] = self.udangdata['Ingredients'].astype('str')
         self.udangdata['Ingredients'] = self.udangdata['Ingredients'].str.lower()
 
-        
-        # Initialize demoji
-        demoji.download_codes()
-
         # Remove emojis from the 'Title' and 'Ingredients' columns
         self.ayamdata['Title'] = self.ayamdata['Title'].apply(lambda x: demoji.replace(x, ""))
         self.ayamdata['Ingredients'] = self.ayamdata['Ingredients'].apply(lambda x: demoji.replace(x, ""))
@@ -79,7 +78,6 @@ class CleaningData:
 
         self.udangdata['Title'] = self.udangdata['Title'].apply(lambda x: demoji.replace(x, ""))
         self.udangdata['Ingredients'] = self.udangdata['Ingredients'].apply(lambda x: demoji.replace(x, ""))
-
 
     def ayam(self):
         return self.ayamdata

@@ -10,6 +10,7 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label, NW, Checkbutton, IntVar
 from tkinter.font import Font
 import textwrap
+import pandas as pd
 
 # Fix scaling on Windows 10 with high DPI scaling
 import ctypes
@@ -17,7 +18,7 @@ ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 # Set up paths relative to this file
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path(r"assets\frame0")
 
 # Import class CleaningData dari file cleaningdata.py
 from cleaningdata import CleaningData
@@ -317,6 +318,208 @@ def showbuttonresult():
     height=329.0
     )
 
+def cb_ingredient(var, word:str):
+    if var.get() == 1:
+        filter_ayamdata(word)
+        filter_kambingdata(word)
+        filter_sapidata(word)
+        filter_ikandata(word)
+        filter_udangdata(word)
+        
+    elif var.get() == 0:
+        filter_ayamdatabackup(word)
+        filter_kambingdatabackup(word)
+        filter_sapidatabackup(word)
+        filter_ikandatabackup(word)
+        filter_udangdatabackup(word)
+
+def filter_ayamdata(word:str):
+    global ayamdata
+    global ayamdata_backup
+    # Create a boolean Series
+    if word == "cabe" or word == "cabai":
+        contains_word = ayamdata['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = ayamdata['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata and transfer these rows to ayamdata_backup
+    ayamdata_backup = pd.concat([ayamdata_backup, ayamdata[~contains_word]], ignore_index=True)
+
+    # Keep only the rows in ayamdata that contain the word
+    ayamdata = ayamdata[contains_word]
+
+    # Reset the index of both DataFrames
+    ayamdata = ayamdata.reset_index(drop=True)
+    ayamdata_backup = ayamdata_backup.reset_index(drop=True)
+
+def filter_kambingdata(word:str):
+    global kambingdata
+    global kambingdata_backup
+    # Create a boolean Series
+    if word == "cabe" or word == "cabai":
+        contains_word = kambingdata['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = kambingdata['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata and transfer these rows to ayamdata_backup
+    kambingdata_backup = pd.concat([kambingdata_backup, kambingdata[~contains_word]], ignore_index=True)
+
+    # Keep only the rows in ayamdata that contain the word
+    kambingdata = kambingdata[contains_word]
+
+    # Reset the index of both DataFrames
+    kambingdata = kambingdata.reset_index(drop=True)
+    kambingdata_backup = kambingdata_backup.reset_index(drop=True)
+
+def filter_sapidata(word:str):
+    global sapidata
+    global sapidata_backup
+    # Create a boolean Series
+    if word == "cabe" or word == "cabai":
+        contains_word = sapidata['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = sapidata['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata and transfer these rows to ayamdata_backup
+    sapidata_backup = pd.concat([sapidata_backup, sapidata[~contains_word]], ignore_index=True)
+
+    # Keep only the rows in ayamdata that contain the word
+    sapidata = sapidata[contains_word]
+
+    # Reset the index of both DataFrames
+    sapidata = sapidata.reset_index(drop=True)
+    sapidata_backup = sapidata_backup.reset_index(drop=True)
+
+def filter_ikandata(word:str):
+    global ikandata
+    global ikandata_backup
+    # Create a boolean Series
+    if word == "cabe" or word == "cabai":
+        contains_word = ikandata['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = ikandata['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata and transfer these rows to ayamdata_backup
+    ikandata_backup = pd.concat([ikandata_backup, ikandata[~contains_word]], ignore_index=True)
+
+    # Keep only the rows in ayamdata that contain the word
+    ikandata = ikandata[contains_word]
+
+    # Reset the index of both DataFrames
+    ikandata = ikandata.reset_index(drop=True)
+    ikandata_backup = ikandata_backup.reset_index(drop=True)
+
+def filter_udangdata(word:str):
+    global udangdata
+    global udangdata_backup
+    # Create a boolean Series
+    if word == "cabe" or word == "cabai":
+        contains_word = udangdata['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = udangdata['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata and transfer these rows to ayamdata_backup
+    udangdata_backup = pd.concat([udangdata_backup, udangdata[~contains_word]], ignore_index=True)
+
+    # Keep only the rows in ayamdata that contain the word
+    udangdata = udangdata[contains_word]
+
+    # Reset the index of both DataFrames
+    udangdata = udangdata.reset_index(drop=True)
+    udangdata_backup = udangdata_backup.reset_index(drop=True)
+
+def filter_ayamdatabackup(word: str):
+    global ayamdata
+    global ayamdata_backup
+
+    # Create a boolean Series
+    contains_word = ayamdata_backup['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
+    ayamdata = pd.concat([ayamdata, ayamdata_backup[contains_word]], ignore_index=True)
+
+    # Drop these rows from ayamdata_backup
+    ayamdata_backup = ayamdata_backup[~contains_word]
+
+    # Reset the index of both DataFrames
+    ayamdata = ayamdata.reset_index(drop=True)
+    ayamdata_backup = ayamdata_backup.reset_index(drop=True)
+
+def filter_kambingdatabackup(word: str):
+    global kambingdata
+    global kambingdata_backup
+    # Create a boolean Series
+    contains_word = kambingdata_backup['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
+    kambingdata = pd.concat([kambingdata, kambingdata_backup[contains_word]], ignore_index=True)
+
+    # Drop these rows from ayamdata_backup
+    kambingdata_backup = kambingdata_backup[~contains_word]
+
+    # Reset the index of both DataFrames
+    kambingdata = kambingdata.reset_index(drop=True)
+    kambingdata_backup = kambingdata_backup.reset_index(drop=True)
+
+def filter_sapidatabackup(word: str):
+    global sapidata
+    global sapidata_backup
+    # Create a boolean Series
+    contains_word = sapidata_backup['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
+    sapidata = pd.concat([sapidata, sapidata_backup[contains_word]], ignore_index=True)
+
+    # Drop these rows from ayamdata_backup
+    sapidata_backup = sapidata_backup[~contains_word]
+
+    # Reset the index of both DataFrames
+    sapidata = sapidata.reset_index(drop=True)
+    sapidata_backup = sapidata_backup.reset_index(drop=True)
+
+def filter_ikandatabackup(word: str):
+    global ikandata
+    global ikandata_backup
+    # Create a boolean Series
+    contains_word = ikandata_backup['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
+    ikandata = pd.concat([ikandata, ikandata_backup[contains_word]], ignore_index=True)
+
+    # Drop these rows from ayamdata_backup
+    ikandata_backup = ikandata_backup[~contains_word]
+
+    # Reset the index of both DataFrames
+    ikandata = ikandata.reset_index(drop=True)
+    ikandata_backup = ikandata_backup.reset_index(drop=True)
+
+def filter_udangdatabackup(word: str):
+    global udangdata
+    global udangdata_backup
+    # Create a boolean Series
+    contains_word = udangdata_backup['Ingredients'].str.contains(word, na=False)
+
+    # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
+    udangdata = pd.concat([udangdata, udangdata_backup[contains_word]], ignore_index=True)
+
+    # Drop these rows from ayamdata_backup
+    udangdata_backup = udangdata_backup[~contains_word]
+
+    # Reset the index of both DataFrames
+    udangdata = udangdata.reset_index(drop=True)
+    udangdata_backup = udangdata_backup.reset_index(drop=True)
+
+def on_enter_entry(event):
+    # Get the string from the entry widget
+    word = entry_1.get().lower()
+
+
+    # Call your function to filter the DataFrame based on this string
+    filter_ayamdata(word)
+    filter_sapidata(word)
+    filter_kambingdata(word)
+    filter_ikandata(word)
+    filter_udangdata(word)
 
 window = Tk()
 
@@ -372,6 +575,7 @@ entry_1.place(
     width=942.0,
     height=80.0
 )
+entry_1.bind("<Return>", on_enter_entry)
 
 image_bg_putih = PhotoImage(
     file=relative_to_assets("bg_putih.png"))
@@ -551,155 +755,6 @@ button_back = Button(
     activebackground="white"
 )
 
-
-def cb_ingredient(var, word:str):
-    if var.get() == 1:
-        filter_ayamdata(word)
-        filter_kambingdata(word)
-        filter_sapidata(word)
-        filter_ikandata(word)
-        filter_udangdata(word)
-        
-    elif var.get() == 0:
-        filter_ayamdatabackup()
-        filter_kambingdatabackup()
-        filter_sapidatabackup()
-        filter_ikandatabackup()
-        filter_udangdatabackup()
-
-def filter_ayamdata(word:str):
-    global ayamdata
-    global ayamdata_backup
-    # Create a boolean Series
-    if word == "cabe" or word == "cabai":
-        contains_word = ayamdata['Ingredients'].str.contains('cabe|cabai', na=False)
-    else:
-        contains_word = ayamdata['Ingredients'].str.contains(word, na=False)
-
-    # Invert the Series and use it to index ayamdata
-    ayamdata_backup = ayamdata[~contains_word]
-
-    # Drop these rows from ayamdata
-    ayamdata = ayamdata[contains_word]
-
-    # Reset the index of both DataFrames
-    ayamdata = ayamdata.reset_index(drop=True)
-    ayamdata_backup = ayamdata_backup.reset_index(drop=True)
-
-def filter_kambingdata(word:str):
-        global kambingdata
-        global kambingdata_backup
-    # Create a boolean Series
-        if word == "cabe" or word == "cabai":
-            contains_word = kambingdata['Ingredients'].str.contains('cabe|cabai', na=False)
-        else:
-            contains_word = kambingdata['Ingredients'].str.contains(word, na=False)
-
-        # Invert the Series and use it to index ayamdata
-        kambingdata_backup = kambingdata[~contains_word]
-
-        # Drop these rows from ayamdata
-        kambingdata = kambingdata[contains_word]
-
-        # Reset the index of both DataFrames
-        kambingdata = kambingdata.reset_index(drop=True)
-        kambingdata_backup = kambingdata_backup.reset_index(drop=True)
-
-def filter_sapidata(word:str):
-    global sapidata
-    global sapidata_backup
-    # Create a boolean Series
-    if word == "cabe" or word == "cabai":
-        contains_word = sapidata['Ingredients'].str.contains('cabe|cabai', na=False)
-    else:
-        contains_word = sapidata['Ingredients'].str.contains(word, na=False)
-
-    # Invert the Series and use it to index ayamdata
-    sapidata_backup = sapidata[~contains_word]
-
-    # Drop these rows from ayamdata
-    sapidata = sapidata[contains_word]
-
-    # Reset the index of both DataFrames
-    sapidata = sapidata.reset_index(drop=True)
-    sapidata_backup = sapidata_backup.reset_index(drop=True)
-
-def filter_ikandata(word:str):
-    global ikandata
-    global ikandata_backup
-    # Create a boolean Series
-    if word == "cabe" or word == "cabai":
-        contains_word = ikandata['Ingredients'].str.contains('cabe|cabai', na=False)
-    else:
-        contains_word = ikandata['Ingredients'].str.contains(word, na=False)
-
-    # Invert the Series and use it to index ayamdata
-    ikandata_backup = ikandata[~contains_word]
-
-    # Drop these rows from ayamdata
-    ikandata = ikandata[contains_word]
-
-    # Reset the index of both DataFrames
-    ikandata = ikandata.reset_index(drop=True)
-    ikandata_backup = ikandata_backup.reset_index(drop=True)
-
-def filter_udangdata(word:str):
-    global udangdata
-    global udangdata_backup
-    # Create a boolean Series
-    if word == "cabe" or word == "cabai":
-        contains_word = udangdata['Ingredients'].str.contains('cabe|cabai', na=False)
-    else:
-        contains_word = udangdata['Ingredients'].str.contains(word, na=False)
-
-    # Invert the Series and use it to index ayamdata
-    udangdata_backup = udangdata[~contains_word]
-
-    # Drop these rows from ayamdata
-    udangdata = udangdata[contains_word]
-
-    # Reset the index of both DataFrames
-    udangdata = udangdata.reset_index(drop=True)
-    udangdata_backup = udangdata_backup.reset_index(drop=True)
-
-def filter_ayamdatabackup():
-    global ayamdata
-    global ayamdata_backup
-    # Trasfer the data back from ayamdata_backup to ayamdata
-    print(type(ayamdata))
-    print(type(ayamdata_backup))
-    ayamdata = ayamdata.append(ayamdata_backup, ignore_index=True)
-    ayamdata = ayamdata.reset_index(drop=True)
-
-def filter_kambingdatabackup():
-    global kambingdata
-    global kambingdata_backup
-    # Trasfer the data back from ayamdata_backup to ayamdata
-    kambingdata = kambingdata.append(kambingdata_backup, ignore_index=True)
-    kambingdata = kambingdata.reset_index(drop=True)
-
-def filter_sapidatabackup():
-    global sapidata
-    global sapidata_backup
-    # Trasfer the data back from ayamdata_backup to ayamdata
-    sapidata = sapidata.append(sapidata_backup, ignore_index=True)
-    sapidata = sapidata.reset_index(drop=True)
-
-def filter_ikandatabackup():
-    global ikandata
-    global ikandata_backup
-    # Trasfer the data back from ayamdata_backup to ayamdata
-    ikandata = ikandata.append(ikandata_backup, ignore_index=True)
-    ikandata = ikandata.reset_index(drop=True)
-
-def filter_udangdatabackup():
-    global udangdata
-    global udangdata_backup
-    # Trasfer the data back from ayamdata_backup to ayamdata
-    udangdata = udangdata.append(udangdata_backup, ignore_index=True)
-    udangdata = udangdata.reset_index(drop=True)
-
-
 checkbputih_value = IntVar()
 checkbputih = Checkbutton(window, variable=checkbputih_value)
 checkbputih.configure(
@@ -726,7 +781,7 @@ checkbmerah.configure(
     activebackground="#FFFFFF",
     onvalue=1,
     offvalue=0, 
-    command=lambda: cb_ingredient(checkbmerah_value, "bawang putih")
+    command=lambda: cb_ingredient(checkbmerah_value, "bawang merah")
 )
 
 checklada_value = IntVar()
@@ -782,7 +837,7 @@ checkbbombay.configure(
     activebackground="#FFFFFF",
     onvalue=1,
     offvalue=0, 
-    command=lambda: cb_ingredient(checkbbombay_value, "bawang bombay")
+    command=lambda: cb_ingredient(checkbbombay_value, "bombay")
 )
 
 checkcabe_value = IntVar()
@@ -1032,11 +1087,10 @@ checktahu.configure(
     text='Tahu',
     width=15,
     activebackground="#FFFFFF",
-   onvalue=1,
+    onvalue=1,
     offvalue=0, 
     command=lambda: cb_ingredient(checktahu_value, "tahu")
 )
-
 
 
 
