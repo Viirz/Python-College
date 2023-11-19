@@ -6,11 +6,11 @@ class CleaningData:
     def __init__(self):
         
         # membaca data dari file csv
-        self.ayamdata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-ayam.csv')
-        self.kambingdata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-kambing.csv')
-        self.sapidata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-sapi.csv')
-        self.ikandata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-ikan.csv')
-        self.udangdata = pd.read_csv('D:\File Coding\Python College\Semester 3\Kecerdasan Buatan\FinalProject\data\dataset-udang.csv')
+        self.ayamdata = pd.read_csv('data\dataset-ayam.csv')
+        self.kambingdata = pd.read_csv('data\dataset-kambing.csv')
+        self.sapidata = pd.read_csv('data\dataset-sapi.csv')
+        self.ikandata = pd.read_csv('data\dataset-ikan.csv')
+        self.udangdata = pd.read_csv('data\dataset-udang.csv')
 
         self.clean_data()
 
@@ -108,7 +108,7 @@ class CleaningData:
     
     def udang_backup(self):
         return pd.DataFrame(columns=self.udangdata.columns)
-    
+
 
 
 
