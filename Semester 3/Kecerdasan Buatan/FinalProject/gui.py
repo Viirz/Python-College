@@ -3,11 +3,15 @@
 # https://github.com/ParthJadhav/Tkinter-Designer
 
 from pathlib import Path
+import os
+import sys
+import subprocess
 
 # Explicit imports to satisfy Flake8
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label, NW, Checkbutton, IntVar, messagebox
 from tkinter.font import Font
 import textwrap
+from tokenize import String
 import pandas as pd
 
 # Fix scaling on Windows 10 with high DPI scaling
@@ -36,8 +40,23 @@ ikandata_backup = data.ikan_backup()
 udangdata = data.udang()
 udangdata_backup = data.udang_backup()
 
+result1_title = ""
+result2_title = ""
+result3_title = ""
+result4_title = ""
+
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
+
+def set_result_title(titles: list):
+    global result1_title, result2_title, result3_title, result4_title
+
+    result_titles = [None, None, None, None]
+
+    for i in range(len(titles)):
+        result_titles[i] = titles[i]
+
+    result1_title, result2_title, result3_title, result4_title = result_titles
 
 # Take the data from dataframe and diplay it on the button
 def button_ayam_clicked():
@@ -53,6 +72,7 @@ def button_ayam_clicked():
 
     # Get the title from these rows
     titles = random_rows['Title'].tolist()
+    set_result_title(titles)
 
     # Wrap the text
     titles = [textwrap.fill(title, width=20) for title in titles]
@@ -82,6 +102,7 @@ def button_kambing_clicked():
 
     # Get the title from these rows
     titles = random_rows['Title'].tolist()
+    set_result_title(titles)
 
     # Wrap the text
     titles = [textwrap.fill(title, width=20) for title in titles]
@@ -111,6 +132,7 @@ def button_sapi_clicked():
 
     # Get the title from these rows
     titles = random_rows['Title'].tolist()
+    set_result_title(titles)
 
     # Wrap the text
     titles = [textwrap.fill(title, width=20) for title in titles]
@@ -140,6 +162,7 @@ def button_ikan_clicked():
 
     # Get the title from these rows
     titles = random_rows['Title'].tolist()
+    set_result_title(titles)
 
     # Wrap the text
     titles = [textwrap.fill(title, width=20) for title in titles]
@@ -169,6 +192,7 @@ def button_udang_clicked():
 
     # Get the title from these rows
     titles = random_rows['Title'].tolist()
+    set_result_title(titles)
 
     # Wrap the text
     titles = [textwrap.fill(title, width=20) for title in titles]
@@ -692,6 +716,48 @@ def reset_data():
     checktahu.deselect()
     checkkunyit.deselect()
 
+def on_button_result_click(number: int):
+    # Get the text from button_result basd on number
+    button_text = String
+    if number == 1:
+        button_text = result1_title
+    elif number == 2:
+        button_text = result2_title
+    elif number == 3:
+        button_text = result3_title
+    elif number == 4:
+        button_text = result4_title
+
+    # List of all dataframes to search
+    dataframes = [ayamdata, kambingdata, sapidata, ikandata, udangdata]
+
+    for df in dataframes:
+        # Search for the text in 'Title' column of the current dataframe
+        row_data = df[df['Title'] == button_text]
+
+        if not row_data.empty:
+            # Write 'Title' to "title.txt"
+            with open("title.txt", "w", encoding='utf-8') as file:
+                file.write(row_data['Title'].values[0])
+
+            # Write 'Ingredients' to "ingredients.txt"
+            with open("ingredients.txt", "w", encoding='utf-8') as file:
+                ingredients = row_data['Ingredients'].values[0].replace("--", "\n")
+                file.write(ingredients)
+
+            # Write 'Steps' to "steps.txt"
+            with open("steps.txt", "w", encoding='utf-8') as file:
+                steps = row_data['Steps'].values[0].replace("--", "\n")
+                file.write(steps)
+            break
+    else:
+        messagebox.showinfo("Info", "Tidak ada data yang sesuai")
+
+    # Open the recipe window
+    script_dir = os.path.dirname(sys.argv[0])
+    result_script_path = os.path.join(script_dir, "gui_result.py")
+    subprocess.Popen(["python", result_script_path])
+
 window = Tk()
 
 window.geometry("1920x1080")
@@ -877,7 +943,7 @@ button_result1 = Button(
     image=button_result_image,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_7 clicked"),
+    command=lambda: on_button_result_click(1),
     relief="flat",
     bg="white",
     activebackground="white"
@@ -887,7 +953,7 @@ button_result2 = Button(
     image=button_result_image,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_8 clicked"),
+    command=lambda: on_button_result_click(2),
     relief="flat",
     bg="white",
     activebackground="white"
@@ -897,7 +963,7 @@ button_result3 = Button(
     image=button_result_image,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_9 clicked"),
+    command=lambda: on_button_result_click(3),
     relief="flat",
     bg="white",
     activebackground="white"
@@ -907,7 +973,7 @@ button_result4 = Button(
     image=button_result_image,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_10 clicked"),
+    command=lambda: on_button_result_click(4),
     relief="flat",
     bg="white",
     activebackground="white"
