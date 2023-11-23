@@ -62,8 +62,9 @@ button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
-    relief="flat"
+    command=lambda: window.destroy(),
+    relief="flat",
+    bg="#FFFFFF"
 )
 button_1.place(
     x=1617.0,
