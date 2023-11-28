@@ -273,7 +273,7 @@ def show_cb():
     checksantan.place(anchor="s", relx=0.25, rely=0.45, x=0, y=0)
     checkbbombay.place(anchor="s", relx=0.25, rely=0.525, x=0, y=0)
     checkcabe.place(anchor="s", relx=0.25, rely=0.6, x=0, y=0)
-    cheackketumbar.place(anchor="s", relx=0.25, rely=0.675, x=0, y=0)
+    checkketumbar.place(anchor="s", relx=0.25, rely=0.675, x=0, y=0)
     checkjahe.place(anchor="s", relx=0.4, rely=0.45, x=0, y=0)
     checkwortel.place(anchor="s", relx=0.4, rely=0.525, x=0, y=0)
     checklengkuas.place(anchor="s", relx=0.4, rely=0.6, x=0, y=0)
@@ -305,7 +305,7 @@ def hide_cb():
     checksantan.place_forget()
     checkbbombay.place_forget()
     checkcabe.place_forget()
-    cheackketumbar.place_forget()
+    checkketumbar.place_forget()
     checkjahe.place_forget()
     checkwortel.place_forget()
     checklengkuas.place_forget()
@@ -382,9 +382,15 @@ def cb_ingredient(var, word:str):
         filter_ikandatabackup(word)
         filter_udangdatabackup(word)
 
+        # Cek semua Checkbutton yang sedang on
+        for checkbutton in checkbuttons:
+            if checkbutton["var"].get() == 1:
+                cb_ingredient(checkbutton["var"], checkbutton["word"])
+
 def filter_ayamdata(word:str):
     global ayamdata
     global ayamdata_backup
+
     # Create a boolean Series
     if word == "cabe" or word == "cabai":
         contains_word = ayamdata['Ingredients'].str.contains('cabe|cabai', na=False)
@@ -404,6 +410,7 @@ def filter_ayamdata(word:str):
 def filter_kambingdata(word:str):
     global kambingdata
     global kambingdata_backup
+
     # Create a boolean Series
     if word == "cabe" or word == "cabai":
         contains_word = kambingdata['Ingredients'].str.contains('cabe|cabai', na=False)
@@ -423,6 +430,7 @@ def filter_kambingdata(word:str):
 def filter_sapidata(word:str):
     global sapidata
     global sapidata_backup
+
     # Create a boolean Series
     if word == "cabe" or word == "cabai":
         contains_word = sapidata['Ingredients'].str.contains('cabe|cabai', na=False)
@@ -442,6 +450,7 @@ def filter_sapidata(word:str):
 def filter_ikandata(word:str):
     global ikandata
     global ikandata_backup
+
     # Create a boolean Series
     if word == "cabe" or word == "cabai":
         contains_word = ikandata['Ingredients'].str.contains('cabe|cabai', na=False)
@@ -461,6 +470,7 @@ def filter_ikandata(word:str):
 def filter_udangdata(word:str):
     global udangdata
     global udangdata_backup
+
     # Create a boolean Series
     if word == "cabe" or word == "cabai":
         contains_word = udangdata['Ingredients'].str.contains('cabe|cabai', na=False)
@@ -482,13 +492,16 @@ def filter_ayamdatabackup(word: str):
     global ayamdata_backup
 
     # Create a boolean Series
-    contains_word = ayamdata_backup['Ingredients'].str.contains(word, na=False)
+    if word == "cabe" or word == "cabai":
+        contains_word = ayamdata_backup['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = ayamdata_backup['Ingredients'].str.contains(word, na=False)
 
     # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
-    ayamdata = pd.concat([ayamdata, ayamdata_backup[contains_word]], ignore_index=True)
+    ayamdata = pd.concat([ayamdata, ayamdata_backup[~contains_word]], ignore_index=True)
 
     # Drop these rows from ayamdata_backup
-    ayamdata_backup = ayamdata_backup[~contains_word]
+    ayamdata_backup = ayamdata_backup[contains_word]
 
     # Reset the index of both DataFrames
     ayamdata = ayamdata.reset_index(drop=True)
@@ -497,14 +510,18 @@ def filter_ayamdatabackup(word: str):
 def filter_kambingdatabackup(word: str):
     global kambingdata
     global kambingdata_backup
+
     # Create a boolean Series
-    contains_word = kambingdata_backup['Ingredients'].str.contains(word, na=False)
+    if word == "cabe" or word == "cabai":
+        contains_word = kambingdata_backup['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = kambingdata_backup['Ingredients'].str.contains(word, na=False)
 
     # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
-    kambingdata = pd.concat([kambingdata, kambingdata_backup[contains_word]], ignore_index=True)
+    kambingdata = pd.concat([kambingdata, kambingdata_backup[~contains_word]], ignore_index=True)
 
     # Drop these rows from ayamdata_backup
-    kambingdata_backup = kambingdata_backup[~contains_word]
+    kambingdata_backup = kambingdata_backup[contains_word]
 
     # Reset the index of both DataFrames
     kambingdata = kambingdata.reset_index(drop=True)
@@ -514,13 +531,16 @@ def filter_sapidatabackup(word: str):
     global sapidata
     global sapidata_backup
     # Create a boolean Series
-    contains_word = sapidata_backup['Ingredients'].str.contains(word, na=False)
+    if word == "cabe" or word == "cabai":
+        contains_word = sapidata_backup['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = sapidata_backup['Ingredients'].str.contains(word, na=False)
 
     # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
-    sapidata = pd.concat([sapidata, sapidata_backup[contains_word]], ignore_index=True)
+    sapidata = pd.concat([sapidata, sapidata_backup[~contains_word]], ignore_index=True)
 
     # Drop these rows from ayamdata_backup
-    sapidata_backup = sapidata_backup[~contains_word]
+    sapidata_backup = sapidata_backup[contains_word]
 
     # Reset the index of both DataFrames
     sapidata = sapidata.reset_index(drop=True)
@@ -530,13 +550,16 @@ def filter_ikandatabackup(word: str):
     global ikandata
     global ikandata_backup
     # Create a boolean Series
-    contains_word = ikandata_backup['Ingredients'].str.contains(word, na=False)
+    if word == "cabe" or word == "cabai":
+        contains_word = ikandata_backup['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = ikandata_backup['Ingredients'].str.contains(word, na=False)
 
     # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
-    ikandata = pd.concat([ikandata, ikandata_backup[contains_word]], ignore_index=True)
+    ikandata = pd.concat([ikandata, ikandata_backup[~contains_word]], ignore_index=True)
 
     # Drop these rows from ayamdata_backup
-    ikandata_backup = ikandata_backup[~contains_word]
+    ikandata_backup = ikandata_backup[contains_word]
 
     # Reset the index of both DataFrames
     ikandata = ikandata.reset_index(drop=True)
@@ -546,13 +569,16 @@ def filter_udangdatabackup(word: str):
     global udangdata
     global udangdata_backup
     # Create a boolean Series
-    contains_word = udangdata_backup['Ingredients'].str.contains(word, na=False)
+    if word == "cabe" or word == "cabai":
+        contains_word = udangdata_backup['Ingredients'].str.contains('cabe|cabai', na=False)
+    else:
+        contains_word = udangdata_backup['Ingredients'].str.contains(word, na=False)
 
     # Use the Series to index ayamdata_backup and transfer these rows to ayamdata
-    udangdata = pd.concat([udangdata, udangdata_backup[contains_word]], ignore_index=True)
+    udangdata = pd.concat([udangdata, udangdata_backup[~contains_word]], ignore_index=True)
 
     # Drop these rows from ayamdata_backup
-    udangdata_backup = udangdata_backup[~contains_word]
+    udangdata_backup = udangdata_backup[contains_word]
 
     # Reset the index of both DataFrames
     udangdata = udangdata.reset_index(drop=True)
@@ -698,7 +724,7 @@ def reset_data():
     checksantan.deselect()
     checkbbombay.deselect()
     checkcabe.deselect()
-    cheackketumbar.deselect()
+    checkketumbar.deselect()
     checkjahe.deselect()
     checkwortel.deselect()
     checklengkuas.deselect()
@@ -1091,9 +1117,9 @@ checkcabe.configure(
     command=lambda: cb_ingredient(checkcabe_value, "cabe")
 )
 
-cheackketumbar_value = IntVar()
-cheackketumbar = Checkbutton(window, variable=cheackketumbar_value)
-cheackketumbar.configure(
+checkketumbar_value = IntVar()
+checkketumbar = Checkbutton(window, variable=checkketumbar_value)
+checkketumbar.configure(
     anchor="w",
     bg="white",
     font="{OpenSansRoman} 16 {}",
@@ -1102,7 +1128,7 @@ cheackketumbar.configure(
     activebackground="#FFFFFF",
     onvalue=1,
     offvalue=0, 
-    command=lambda: cb_ingredient(cheackketumbar_value, "ketumbar")
+    command=lambda: cb_ingredient(checkketumbar_value, "ketumbar")
 )
 
 checkjahe_value = IntVar()
@@ -1328,6 +1354,33 @@ checktahu.configure(
     offvalue=0, 
     command=lambda: cb_ingredient(checktahu_value, "tahu")
 )
+
+checkbuttons = [
+    {"var": checkbputih_value, "word": "bawang putih"},
+    {"var": checkbmerah_value, "word": "bawang merah"},
+    {"var": checklada_value, "word": "lada"},
+    {"var": checkmerica_value, "word": "merica"},
+    {"var": checkbbombay_value, "word": "santan"},
+    {"var": checkbbombay_value, "word": "bombay"},
+    {"var": checkcabe_value, "word": "cabe"},
+    {"var": checkketumbar_value, "word": "ketumbar"},
+    {"var": checkjahe_value, "word": "jahe"},
+    {"var": checkwortel_value, "word": "wortel"},
+    {"var": checklengkuas_value, "word": "lengkuas"},
+    {"var": checkkunyit_value, "word": "kunyit"},
+    {"var": checkgaram_value, "word": "garam"},
+    {"var": checkgula_value, "word": "gula"},
+    {"var": checkkemiri_value, "word": "kemiri"},
+    {"var": checktomat_value, "word": "tomat"},
+    {"var": checkkacang_value, "word": "kacang"},
+    {"var": checkjamur_value, "word": "jamur"},
+    {"var": checkpenyedap_value, "word": "penyedap"},
+    {"var": checktempe_value, "word": "tempe"},
+    {"var": checktelur_value, "word": "telur"},
+    {"var": checkbuncis_value, "word": "buncis"},
+    {"var": checkjeruknipis_value, "word": "jeruk nipis"},
+    {"var": checktahu_value, "word": "tahu"},
+]
 
 window.resizable(False, False)
 window.mainloop()
