@@ -15,7 +15,7 @@ class CleaningData:
         self.clean_data()
 
     def clean_data(self):
-
+        
         # menghapus kolom yang null
         self.ayamdata = self.ayamdata.dropna()
         self.kambingdata = self.kambingdata.dropna()

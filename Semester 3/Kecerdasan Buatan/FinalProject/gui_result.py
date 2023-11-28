@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, Label
+from tkinter import Tk, Canvas, Button, PhotoImage
 import textwrap
 
 import ctypes
@@ -68,7 +68,7 @@ button_1 = Button(
 )
 button_1.place(
     x=1617.0,
-    y=999.0,
+    y=970.0,
     width=255.0,
     height=70.0
 )
@@ -89,10 +89,13 @@ with open("title.txt", "r", encoding='utf-8') as file:
 text_title = text_title.title()
 
 # Wrap the text to a width of 20 characters
-text_title = textwrap.fill(text_title, width=20)
+text_title = textwrap.fill(text_title, width=30)
 
 # Calculate the font size based on the length of the text
-font_size = min(70, 128 // (len(text_title.split()) // 2))
+if (len(text_title.split()) // 3) > 0:
+    font_size = min(70, 165 // (len(text_title.split()) // 3))
+else:
+    font_size = min(70, 165 // (len(text_title.split()) // 2))
 
 canvas.create_text(
     550.0,
@@ -100,7 +103,7 @@ canvas.create_text(
     anchor="nw",
     text=text_title,
     fill="#FFFFFF",  # Set the text color to white
-    font=("OpenSansRoman Bold", 95 * -1)
+    font=("OpenSansRoman Bold", font_size * -1)
 )
 
 # Read the text from "ingredients.txt"
